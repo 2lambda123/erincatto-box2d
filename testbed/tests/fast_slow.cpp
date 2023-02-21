@@ -1,6 +1,6 @@
 // MIT License
 
-// Copyright (c) 2020 Erin Catto
+// Copyright (c) 2019 Erin Catto
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,35 +20,54 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "box2d/box2d.h"
-#include "doctest.h"
-#include <stdio.h>
+#include "test.h"
 
-DOCTEST_TEST_CASE("math test")
+class FastSlow : public Test
 {
-	SUBCASE("sweep")
+public:
+
+	FastSlow()
 	{
-		// From issue #447
-		b2Sweep sweep{};
-		sweep.localCenter.SetZero();
-		sweep.c1.Set(-2.0f, 4.0f);
-		sweep.c2.Set(3.0f, 8.0f);
-		sweep.a1 = 0.5f;
-		sweep.a2 = 5.0f;
-		sweep.alpha0 = 0.0f;
+		{
+			b2BodyDef bd;
+			b2Body* ground = m_world->CreateBody(&bd);
 
-		b2Transform transform;
+			b2EdgeShape shape;
+			shape.SetTwoSided(b2Vec2(-10.0f, 0.0f), b2Vec2(10.0f, 0.0f));
+			ground->CreateFixture(&shape, 0.0f);
 
-		sweep.GetTransform(&transform, 0.0f);
-		DOCTEST_REQUIRE_EQ(transform.p.x, sweep.c1.x);
-		DOCTEST_REQUIRE_EQ(transform.p.y, sweep.c1.y);
-		DOCTEST_REQUIRE_EQ(transform.q.c, cosf(sweep.a1));
-		DOCTEST_REQUIRE_EQ(transform.q.s, sinf(sweep.a1));
+			shape.SetTwoSided(b2Vec2(-10.0f, 0.0f), b2Vec2(-10.0f, 5.0f));
+			ground->CreateFixture(&shape, 0.0f);
+		}
 
-		sweep.GetTransform(&transform, 1.0f);
-		DOCTEST_REQUIRE_EQ(transform.p.x, sweep.c2.x);
-		DOCTEST_REQUIRE_EQ(transform.p.y, sweep.c2.y);
-		DOCTEST_REQUIRE_EQ(transform.q.c, cosf(sweep.a2));
-		DOCTEST_REQUIRE_EQ(transform.q.s, sinf(sweep.a2));
+		{
+			b2CircleShape circle;
+			circle.m_radius = 0.35f;
+
+			b2FixtureDef fd;
+			fd.density = 100.0f;
+			fd.shape = &circle;
+
+			b2BodyDef bd;
+			bd.type = b2_dynamicBody;
+			bd.gravityScale = 0.0f;		
+
+			bd.position.Set(-9.0f, 2.5f);
+			b2Body* body = m_world->CreateBody(&bd);
+			body->CreateFixture(&circle, 100.0f);
+
+			bd.position.Set(0.0f, 2.5f);
+			bd.linearVelocity.Set(-400.0f, 0.0f);
+			body = m_world->CreateBody(&bd);
+			circle.m_radius = 0.25f;
+			body->CreateFixture(&circle, 100.0f);
+		}
 	}
-}
+
+	static Test* Create()
+	{
+		return new FastSlow;
+	}
+};
+
+static int testIndex = RegisterTest("Continuous", "Fast Slow", FastSlow::Create);

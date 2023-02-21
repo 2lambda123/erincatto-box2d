@@ -71,6 +71,7 @@
 /// The radius of the polygon/edge shape skin. This should not be modified. Making
 /// this smaller means polygons will have an insufficient buffer for continuous collision.
 /// Making it larger may create artifacts for vertex collision.
+/// TODO eliminate this
 #define b2_polygonRadius		(2.0f * b2_linearSlop)
 
 /// Maximum number of sub-steps per contact in continuous physics simulation.
@@ -92,7 +93,7 @@
 
 /// The maximum linear translation of a body per step. This limit is very large and is used
 /// to prevent numerical problems. You shouldn't need to adjust this. Meters.
-#define b2_maxTranslation			(2.0f * b2_lengthUnitsPerMeter)
+#define b2_maxTranslation			(20.0f * b2_lengthUnitsPerMeter)
 #define b2_maxTranslationSquared	(b2_maxTranslation * b2_maxTranslation)
 
 /// The maximum angular velocity of a body. This limit is very large and is used
