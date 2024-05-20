@@ -14,7 +14,6 @@ set (TESTBED_SOURCE_FILES
 	tests/add_pair.cpp
 	tests/apply_force.cpp
 	tests/body_types.cpp
-	tests/box_stack.cpp
 	tests/breakable.cpp
 	tests/bridge.cpp
 	tests/bullet_test.cpp
@@ -38,8 +37,10 @@ set (TESTBED_SOURCE_FILES
 	tests/dynamic_tree.cpp
 	tests/edge_shapes.cpp
 	tests/edge_test.cpp
+	tests/fast_slow.cpp
 	tests/friction.cpp
 	tests/gear_joint.cpp
+	tests/ghost_test.cpp
 	tests/heavy1.cpp
 	tests/heavy2.cpp
 	tests/mobile_balanced.cpp
@@ -66,6 +67,7 @@ set (TESTBED_SOURCE_FILES
 	tests/tiles.cpp
 	tests/time_of_impact.cpp
 	tests/tumbler.cpp
+	tests/vertical_stacks.cpp
 	tests/web.cpp
 	tests/wheel_joint.cpp
 	tests/wrecking_ball.cpp
