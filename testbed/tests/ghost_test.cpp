@@ -29,101 +29,101 @@ class GhostTest : public Test
 {
 public:
 
-	GhostTest()
-	{
-		{
-			b2BodyDef bd;
-			bd.position.Set(0.0f, 0.0f);
-			b2Body* body = m_world->CreateBody(&bd);
+    GhostTest()
+    {
+        {
+            b2BodyDef bd;
+            bd.position.Set(0.0f, 0.0f);
+            b2Body* body = m_world->CreateBody(&bd);
 
-			b2EdgeShape edge;
+            b2EdgeShape edge;
 
-			edge.SetTwoSided(b2Vec2(-10.0f, 0.0f), b2Vec2(10.0f, 0.0f));
-			body->CreateFixture(&edge, 0.0f);
-		}
+            edge.SetTwoSided(b2Vec2(-10.0f, 0.0f), b2Vec2(10.0f, 0.0f));
+            body->CreateFixture(&edge, 0.0f);
+        }
 
-		m_x = 0.0f;
-		m_body = nullptr;
+        m_x = 0.0f;
+        m_body = nullptr;
 
-		LaunchBox();
-	}
+        LaunchBox();
+    }
 
-	void LaunchBox()
-	{
-		if (m_body)
-		{
-			m_world->DestroyBody(m_body);
-			m_body = nullptr;
-		}
+    void LaunchBox()
+    {
+        if (m_body)
+        {
+            m_world->DestroyBody(m_body);
+            m_body = nullptr;
+        }
 
-		b2BodyDef bd;
-		bd.type = b2_dynamicBody;
-		bd.position.Set(m_x, 10.0f);
-		bd.gravityScale = 0.0f;
+        b2BodyDef bd;
+        bd.type = b2_dynamicBody;
+        bd.position.Set(m_x, 10.0f);
+        bd.gravityScale = 0.0f;
 
-		b2PolygonShape box;
-		box.SetAsBox(0.25f, 0.25f);
+        b2PolygonShape box;
+        box.SetAsBox(0.25f, 0.25f);
 
-		m_body = m_world->CreateBody(&bd);
-		m_body->CreateFixture(&box, 1.0f);
+        m_body = m_world->CreateBody(&bd);
+        m_body->CreateFixture(&box, 1.0f);
 
-		m_body->SetTransform(b2Vec2(m_x, 10.0f), 0.0f);
-		m_body->SetLinearVelocity(b2Vec2(50.0f, -50.0f));
-		m_body->SetAngularVelocity(0.0f);
-	}
+        m_body->SetTransform(b2Vec2(m_x, 10.0f), 0.0f);
+        m_body->SetLinearVelocity(b2Vec2(50.0f, -50.0f));
+        m_body->SetAngularVelocity(0.0f);
+    }
 
-	void LaunchCircle()
-	{
-		if (m_body)
-		{
-			m_world->DestroyBody(m_body);
-			m_body = nullptr;
-		}
+    void LaunchCircle()
+    {
+        if (m_body)
+        {
+            m_world->DestroyBody(m_body);
+            m_body = nullptr;
+        }
 
-		b2BodyDef bd;
-		bd.type = b2_dynamicBody;
-		bd.position.Set(m_x, 10.0f);
-		bd.gravityScale = 0.0f;
+        b2BodyDef bd;
+        bd.type = b2_dynamicBody;
+        bd.position.Set(m_x, 10.0f);
+        bd.gravityScale = 0.0f;
 
-		b2CircleShape circle;
-		circle.m_radius = 0.25f;
+        b2CircleShape circle;
+        circle.m_radius = 0.25f;
 
-		m_body = m_world->CreateBody(&bd);
-		m_body->CreateFixture(&circle, 1.0f);
+        m_body = m_world->CreateBody(&bd);
+        m_body->CreateFixture(&circle, 1.0f);
 
-		m_body->SetTransform(b2Vec2(m_x, 10.0f), 0.0f);
-		m_body->SetLinearVelocity(b2Vec2(50.0f, -50.0f));
-		m_body->SetAngularVelocity(0.0f);
-	}
+        m_body->SetTransform(b2Vec2(m_x, 10.0f), 0.0f);
+        m_body->SetLinearVelocity(b2Vec2(50.0f, -50.0f));
+        m_body->SetAngularVelocity(0.0f);
+    }
 
-	void UpdateUI() override
-	{
-		ImGui::SetNextWindowPos(ImVec2(10.0f, 100.0f));
-		ImGui::SetNextWindowSize(ImVec2(240.0f, 100.0f));
-		ImGui::Begin("Ghost Test", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+    void UpdateUI() override
+    {
+        ImGui::SetNextWindowPos(ImVec2(10.0f, 100.0f));
+        ImGui::SetNextWindowSize(ImVec2(240.0f, 100.0f));
+        ImGui::Begin("Ghost Test", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-		ImGui::SliderFloat("x-coord", &m_x, -1.0f, 1.0f, "%.1f");
+        ImGui::SliderFloat("x-coord", &m_x, -1.0f, 1.0f, "%.1f");
 
-		if (ImGui::Button("Launch Box"))
-		{
-			LaunchBox();
-		}
+        if (ImGui::Button("Launch Box"))
+        {
+            LaunchBox();
+        }
 
-		if (ImGui::Button("Launch Circle"))
-		{
-			LaunchCircle();
-		}
+        if (ImGui::Button("Launch Circle"))
+        {
+            LaunchCircle();
+        }
 
-		ImGui::End();
-	}
+        ImGui::End();
+    }
 
-	static Test* Create()
-	{
-		return new GhostTest;
-	}
+    static Test* Create()
+    {
+        return new GhostTest;
+    }
 
-	b2Body* m_body;
-	float m_x;
+    b2Body* m_body;
+    float m_x;
 };
 
 static int testIndex = RegisterTest("Continuous", "Ghost Test", GhostTest::Create);

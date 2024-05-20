@@ -29,134 +29,134 @@ class Restitution : public Test
 {
 public:
 
-	enum
-	{
-		e_count = 11,
-	};
+    enum
+    {
+        e_count = 11,
+    };
 
-	enum ShapeType
-	{
-		e_circleShape = 0,
-		e_boxShape
-	};
+    enum ShapeType
+    {
+        e_circleShape = 0,
+        e_boxShape
+    };
 
-	Restitution()
-	{
-		const float threshold = 10.0f;
-		b2BodyDef bd;
-		b2Body* ground = m_world->CreateBody(&bd);
+    Restitution()
+    {
+        const float threshold = 10.0f;
+        b2BodyDef bd;
+        b2Body* ground = m_world->CreateBody(&bd);
 
-		b2EdgeShape shape;
-		shape.SetTwoSided(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
-			
-		b2FixtureDef fd;
-		fd.shape = &shape;
-		fd.restitutionThreshold = threshold;
-		ground->CreateFixture(&fd);
+        b2EdgeShape shape;
+        shape.SetTwoSided(b2Vec2(-40.0f, 0.0f), b2Vec2(40.0f, 0.0f));
 
-		m_shapeType = e_circleShape;
-		m_threshold = 1.0f;
+        b2FixtureDef fd;
+        fd.shape = &shape;
+        fd.restitutionThreshold = threshold;
+        ground->CreateFixture(&fd);
 
-		for (int32 i = 0; i < e_count; ++i)
-		{
-			m_bodies[i] = nullptr;
-			m_restitutions[i] = 0.1f * i;
-			m_xcoords[i] = -10.0f + 3.0f * i;
-		}
+        m_shapeType = e_circleShape;
+        m_threshold = 1.0f;
 
-		CreateShapes();
-	}
+        for (int32 i = 0; i < e_count; ++i)
+        {
+            m_bodies[i] = nullptr;
+            m_restitutions[i] = 0.1f * i;
+            m_xcoords[i] = -10.0f + 3.0f * i;
+        }
 
-	void CreateShapes()
-	{
-		for (int32 i = 0; i < e_count; ++i)
-		{
-			if (m_bodies[i] != nullptr)
-			{
-				m_world->DestroyBody(m_bodies[i]);
-				m_bodies[i] = nullptr;
-			}
-		}
+        CreateShapes();
+    }
 
-		b2CircleShape circle;
-		circle.m_radius = 1.0f;
+    void CreateShapes()
+    {
+        for (int32 i = 0; i < e_count; ++i)
+        {
+            if (m_bodies[i] != nullptr)
+            {
+                m_world->DestroyBody(m_bodies[i]);
+                m_bodies[i] = nullptr;
+            }
+        }
 
-		b2PolygonShape box;
-		box.SetAsBox(1.0f, 1.0f);
+        b2CircleShape circle;
+        circle.m_radius = 1.0f;
 
-		b2FixtureDef fd;
-		fd.density = 1.0f;
+        b2PolygonShape box;
+        box.SetAsBox(1.0f, 1.0f);
 
-		if (m_shapeType == e_circleShape)
-		{
-			fd.shape = &circle;
-		}
-		else
-		{
-			fd.shape = &box;
-		}
+        b2FixtureDef fd;
+        fd.density = 1.0f;
 
-		for (int32 i = 0; i < e_count; ++i)
-		{
-			b2BodyDef bd;
-			bd.type = b2_dynamicBody;
-			bd.position.Set(m_xcoords[i], 20.0f);
+        if (m_shapeType == e_circleShape)
+        {
+            fd.shape = &circle;
+        }
+        else
+        {
+            fd.shape = &box;
+        }
 
-			b2Body* body = m_world->CreateBody(&bd);
+        for (int32 i = 0; i < e_count; ++i)
+        {
+            b2BodyDef bd;
+            bd.type = b2_dynamicBody;
+            bd.position.Set(m_xcoords[i], 20.0f);
 
-			fd.restitution = m_restitutions[i];
-			fd.restitutionThreshold = m_threshold;
-			body->CreateFixture(&fd);
+            b2Body* body = m_world->CreateBody(&bd);
 
-			m_bodies[i] = body;
-		}
-	}
+            fd.restitution = m_restitutions[i];
+            fd.restitutionThreshold = m_threshold;
+            body->CreateFixture(&fd);
 
-	void UpdateUI() override
-	{
-		ImGui::SetNextWindowPos(ImVec2(10.0f, 100.0f));
-		ImGui::SetNextWindowSize(ImVec2(240.0f, 230.0f));
-		ImGui::Begin("Restitution", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+            m_bodies[i] = body;
+        }
+    }
 
-		bool changed = false;
-		const char* shapeTypes[] = { "Circle", "Box" };
+    void UpdateUI() override
+    {
+        ImGui::SetNextWindowPos(ImVec2(10.0f, 100.0f));
+        ImGui::SetNextWindowSize(ImVec2(240.0f, 230.0f));
+        ImGui::Begin("Restitution", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-		int shapeType = int(m_shapeType);
-		changed = changed || ImGui::Combo("Shape", &shapeType, shapeTypes, IM_ARRAYSIZE(shapeTypes));
-		m_shapeType = ShapeType(shapeType);
+        bool changed = false;
+        const char* shapeTypes[] = { "Circle", "Box" };
 
-		changed = changed || ImGui::SliderFloat("Threshold", &m_threshold, 0.0f, 20.0f);
-		changed = changed || ImGui::Button("Respawn");
+        int shapeType = int(m_shapeType);
+        changed = changed || ImGui::Combo("Shape", &shapeType, shapeTypes, IM_ARRAYSIZE(shapeTypes));
+        m_shapeType = ShapeType(shapeType);
 
-		if (changed)
-		{
-			CreateShapes();
-		}
+        changed = changed || ImGui::SliderFloat("Threshold", &m_threshold, 0.0f, 20.0f);
+        changed = changed || ImGui::Button("Respawn");
 
-		ImGui::End();
-	}
+        if (changed)
+        {
+            CreateShapes();
+        }
 
-	void Step(Settings& settings) override
-	{
-		for (int32 i = 0; i < e_count; ++i)
-		{
-			b2Vec2 p(m_xcoords[i], -1.0f);
-			g_debugDraw.DrawString(p, "%g", m_restitutions[i]);
-		}
+        ImGui::End();
+    }
 
-		Test::Step(settings);
-	}
+    void Step(Settings& settings) override
+    {
+        for (int32 i = 0; i < e_count; ++i)
+        {
+            b2Vec2 p(m_xcoords[i], -1.0f);
+            g_debugDraw.DrawString(p, "%g", m_restitutions[i]);
+        }
 
-	static Test* Create()
-	{
-		return new Restitution;
-	}
+        Test::Step(settings);
+    }
 
-	b2Body* m_bodies[e_count];
-	float m_restitutions[e_count];
-	float m_xcoords[e_count];
-	float m_threshold;
-	ShapeType m_shapeType;
+    static Test* Create()
+    {
+        return new Restitution;
+    }
+
+    b2Body* m_bodies[e_count];
+    float m_restitutions[e_count];
+    float m_xcoords[e_count];
+    float m_threshold;
+    ShapeType m_shapeType;
 };
 
 static int testIndex = RegisterTest("Forces", "Restitution", Restitution::Create);
