@@ -9,8 +9,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -24,31 +24,29 @@
 #include "doctest.h"
 #include <stdio.h>
 
-DOCTEST_TEST_CASE("math test")
-{
-    SUBCASE("sweep")
-    {
-        // From issue #447
-        b2Sweep sweep{};
-        sweep.localCenter.SetZero();
-        sweep.c1.Set(-2.0f, 4.0f);
-        sweep.c2.Set(3.0f, 8.0f);
-        sweep.a1 = 0.5f;
-        sweep.a2 = 5.0f;
-        sweep.alpha0 = 0.0f;
+DOCTEST_TEST_CASE("math test") {
+  SUBCASE("sweep") {
+    // From issue #447
+    b2Sweep sweep{};
+    sweep.localCenter.SetZero();
+    sweep.c1.Set(-2.0f, 4.0f);
+    sweep.c2.Set(3.0f, 8.0f);
+    sweep.a1 = 0.5f;
+    sweep.a2 = 5.0f;
+    sweep.alpha0 = 0.0f;
 
-        b2Transform transform;
+    b2Transform transform;
 
-        sweep.GetTransform(&transform, 0.0f);
-        DOCTEST_REQUIRE_EQ(transform.p.x, sweep.c1.x);
-        DOCTEST_REQUIRE_EQ(transform.p.y, sweep.c1.y);
-        DOCTEST_REQUIRE_EQ(transform.q.c, cosf(sweep.a1));
-        DOCTEST_REQUIRE_EQ(transform.q.s, sinf(sweep.a1));
+    sweep.GetTransform(&transform, 0.0f);
+    DOCTEST_REQUIRE_EQ(transform.p.x, sweep.c1.x);
+    DOCTEST_REQUIRE_EQ(transform.p.y, sweep.c1.y);
+    DOCTEST_REQUIRE_EQ(transform.q.c, cosf(sweep.a1));
+    DOCTEST_REQUIRE_EQ(transform.q.s, sinf(sweep.a1));
 
-        sweep.GetTransform(&transform, 1.0f);
-        DOCTEST_REQUIRE_EQ(transform.p.x, sweep.c2.x);
-        DOCTEST_REQUIRE_EQ(transform.p.y, sweep.c2.y);
-        DOCTEST_REQUIRE_EQ(transform.q.c, cosf(sweep.a2));
-        DOCTEST_REQUIRE_EQ(transform.q.s, sinf(sweep.a2));
-    }
+    sweep.GetTransform(&transform, 1.0f);
+    DOCTEST_REQUIRE_EQ(transform.p.x, sweep.c2.x);
+    DOCTEST_REQUIRE_EQ(transform.p.y, sweep.c2.y);
+    DOCTEST_REQUIRE_EQ(transform.q.c, cosf(sweep.a2));
+    DOCTEST_REQUIRE_EQ(transform.q.s, sinf(sweep.a2));
+  }
 }
